@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ハイジャンプ選手権</title>
+<title>最高到達点チャレンジ</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,37 +11,19 @@
 <video id="cam" playsinline muted></video>
 <button id="fs-btn" title="全画面（Fキー）">⛶</button>
 
-<!-- HUD -->
+<!-- プレイ中の表示 -->
 <div id="hud" class="hidden">
-  <div id="hud-player"></div>
-  <div id="hud-height">0.0<span>m</span></div>
-  <div id="hud-best"></div>
+  <div id="hud-name"></div>
+  <div id="hud-timer"><span id="hud-sec">10</span></div>
+  <div id="hud-reach"><small>最高到達点</small><b id="hud-reach-val">---</b><span>cm</span></div>
 </div>
 <div id="prompt" class="hidden"></div>
 <div id="popup" class="hidden"></div>
-<div id="guide" class="hidden"></div>
-
-<!-- 助走ゲージ -->
-<div id="speed-wrap" class="hidden">
-  <div class="label">スピード</div>
-  <div id="speed-bar"><div id="speed-fill"></div></div>
-  <div id="speed-time"></div>
-</div>
-
-<!-- 踏み切りゲージ -->
-<div id="timing-wrap" class="hidden">
-  <div id="timing-bar">
-    <div class="zone good"></div>
-    <div class="zone great"></div>
-    <div class="zone perfect"></div>
-    <div id="timing-marker"></div>
-  </div>
-</div>
 
 <!-- タイトル -->
 <section id="title" class="screen">
-  <h1>ハイジャンプ<br><small>選手権</small></h1>
-  <p class="desc">カメラの前で本当に走って、跳んで、バンザイ！<br>いちばん高く跳んだ人の勝ち！</p>
+  <h1>最高到達点<br><small>チャレンジ</small></h1>
+  <p class="desc">カメラの前で思いっきりジャンプ！<br>手がどこまで届いたか（cm）で勝負！</p>
   <div id="cam-status" class="cam-status loading"></div>
 
   <div class="setup">
@@ -55,12 +37,20 @@
       </div>
     </div>
     <div class="row">
-      <span>回数</span>
-      <div id="round-btns" class="seg">
-        <button data-n="1">1回</button>
-        <button data-n="3" class="on">3回</button>
+      <span>制限時間</span>
+      <div id="time-btns" class="seg">
+        <button data-n="10" class="on">10秒</button>
+        <button data-n="20">20秒</button>
       </div>
     </div>
+    <div class="row">
+      <span>競うもの</span>
+      <div id="mode-btns" class="seg">
+        <button data-n="0" class="on">到達点</button>
+        <button data-n="1">ジャンプ力</button>
+      </div>
+    </div>
+    <div class="names-head"><span>なまえ</span><span>身長(cm)</span></div>
     <div id="names"></div>
   </div>
 
@@ -68,37 +58,37 @@
   <button id="rank-btn" class="sub">ランキングを見る</button>
 
   <div class="howto">
-    <b>あそびかた</b>（カメラから2〜3m離れて、全身を写す）
+    <b>あそびかた</b>
     <ol>
-      <li><b>スタート</b>：両手を上げる 🙌</li>
-      <li><b>助走</b>：その場でももを高く上げて全力足ぶみ！</li>
-      <li><b>踏み切り</b>：マーカーがまん中に来たら本当にジャンプ！高く跳ぶほど記録アップ</li>
-      <li><b>空中ジャンプ</b>：ちぢむ輪がキャラに重なった瞬間にバンザイ！</li>
+      <li>カメラから3〜4m離れて、<b>頭から足まで全身</b>が写る位置に立つ</li>
+      <li><b>両手をまっすぐ上</b>に伸ばして止まる → 立ったときの指先の高さを測る</li>
+      <li>制限時間のあいだ、何回でもジャンプ！いちばん高かった記録が残る</li>
     </ol>
-    <p class="small">カメラが使えないときは スペースキー / 画面タップ でも遊べます（連打・押すだけ）。Fキーで全画面。</p>
+    <p class="small">
+      <b>到達点</b>＝ジャンプして指先が届いた高さ（背が高いほど有利）<br>
+      <b>ジャンプ力</b>＝立ったときより何cm高く跳べたか（垂直跳び）<br>
+      cmは身長をもとに計算するので、身長を入れるほど正確になります。Fキーで全画面。
+    </p>
   </div>
 </section>
 
-<!-- 1人ずつの準備 -->
-<section id="ready" class="screen hidden">
-  <div id="ready-round"></div>
+<!-- 1人ずつの準備（測定） -->
+<section id="ready" class="screen side hidden">
   <div id="ready-name"></div>
-  <div id="ready-best"></div>
-  <div id="ready-cam">
-    <div id="ready-cam-msg"></div>
-    <div id="ready-hold"><div id="ready-hold-fill"></div></div>
-  </div>
-  <button id="ready-btn" class="big">準備OK！</button>
-  <p class="hint">ボタン / スペースキーでもスタートできます</p>
+  <div id="ready-msg"></div>
+  <div id="ready-hold"><div id="ready-hold-fill"></div></div>
+  <div id="ready-sub"></div>
+  <button id="skip-btn" class="sub">この人をとばす</button>
 </section>
 
-<!-- 1回ごとの結果 -->
-<section id="jump-result" class="screen hidden">
+<!-- 1人の結果 -->
+<section id="jump-result" class="screen side hidden">
   <div id="jr-name"></div>
-  <div id="jr-height"></div>
+  <div class="jr-label">最高到達点</div>
+  <div id="jr-reach"></div>
   <div id="jr-detail"></div>
-  <div id="jr-landmark"></div>
-  <div id="jr-new" class="hidden">自己ベスト更新！</div>
+  <div id="jr-pass"></div>
+  <button id="jr-retry" class="sub">もう一度この人</button>
   <button id="jr-next" class="big">つぎへ</button>
 </section>
 
@@ -114,6 +104,10 @@
 <!-- ランキング -->
 <section id="ranking" class="screen hidden">
   <h2>歴代ランキング</h2>
+  <div id="rank-tabs" class="seg center">
+    <button data-n="0" class="on">到達点</button>
+    <button data-n="1">ジャンプ力</button>
+  </div>
   <ol id="rank-list"></ol>
   <button id="rank-back" class="big">もどる</button>
   <button id="rank-clear" class="sub">ランキングを消す</button>
