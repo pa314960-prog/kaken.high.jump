@@ -8,6 +8,8 @@
 </head>
 <body>
 <canvas id="game"></canvas>
+<video id="cam" playsinline muted></video>
+<button id="fs-btn" title="全画面（Fキー）">⛶</button>
 
 <!-- HUD -->
 <div id="hud" class="hidden">
@@ -17,6 +19,7 @@
 </div>
 <div id="prompt" class="hidden"></div>
 <div id="popup" class="hidden"></div>
+<div id="guide" class="hidden"></div>
 
 <!-- 助走ゲージ -->
 <div id="speed-wrap" class="hidden">
@@ -38,7 +41,8 @@
 <!-- タイトル -->
 <section id="title" class="screen">
   <h1>ハイジャンプ<br><small>選手権</small></h1>
-  <p class="desc">連打で助走 → タイミングよく踏み切り → 空中でもう一段ジャンプ！<br>いちばん高く跳んだ人の勝ち！</p>
+  <p class="desc">カメラの前で本当に走って、跳んで、バンザイ！<br>いちばん高く跳んだ人の勝ち！</p>
+  <div id="cam-status" class="cam-status loading"></div>
 
   <div class="setup">
     <div class="row">
@@ -64,12 +68,14 @@
   <button id="rank-btn" class="sub">ランキングを見る</button>
 
   <div class="howto">
-    <b>あそびかた</b>（スペースキー / 画面タップ）
+    <b>あそびかた</b>（カメラから2〜3m離れて、全身を写す）
     <ol>
-      <li><b>助走</b>：3秒間とにかく連打！スピードをためる</li>
-      <li><b>踏み切り</b>：動くマーカーがまん中に来たら押す</li>
-      <li><b>空中ジャンプ</b>：ちぢむ輪がキャラに重なった瞬間に押す</li>
+      <li><b>スタート</b>：両手を上げる 🙌</li>
+      <li><b>助走</b>：その場でももを高く上げて全力足ぶみ！</li>
+      <li><b>踏み切り</b>：マーカーがまん中に来たら本当にジャンプ！高く跳ぶほど記録アップ</li>
+      <li><b>空中ジャンプ</b>：ちぢむ輪がキャラに重なった瞬間にバンザイ！</li>
     </ol>
+    <p class="small">カメラが使えないときは スペースキー / 画面タップ でも遊べます（連打・押すだけ）。Fキーで全画面。</p>
   </div>
 </section>
 
@@ -78,8 +84,12 @@
   <div id="ready-round"></div>
   <div id="ready-name"></div>
   <div id="ready-best"></div>
+  <div id="ready-cam">
+    <div id="ready-cam-msg"></div>
+    <div id="ready-hold"><div id="ready-hold-fill"></div></div>
+  </div>
   <button id="ready-btn" class="big">準備OK！</button>
-  <p class="hint">押すとカウントダウンが始まります</p>
+  <p class="hint">ボタン / スペースキーでもスタートできます</p>
 </section>
 
 <!-- 1回ごとの結果 -->
