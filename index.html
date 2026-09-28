@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>ハイジャンプ選手権</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div id="hud-player"></div>
+  <div id="hud-height">0.0<span>m</span></div>
+  <div id="hud-best"></div>
+</div>
+<div id="prompt" class="hidden"></div>
+<div id="popup" class="hidden"></div>
+
+<!-- 助走ゲージ -->
+<div id="speed-wrap" class="hidden">
+  <div class="label">スピード</div>
+  <div id="speed-bar"><div id="speed-fill"></div></div>
+  <div id="speed-time"></div>
+</div>
+
+<!-- 踏み切りゲージ -->
+<div id="timing-wrap" class="hidden">
+  <div id="timing-bar">
+    <div class="zone good"></div>
+    <div class="zone great"></div>
+    <div class="zone perfect"></div>
+    <div id="timing-marker"></div>
+  </div>
+</div>
+
+<!-- タイトル -->
+<section id="title" class="screen">
+  <h1>ハイジャンプ<br><small>選手権</small></h1>
+  <p class="desc">連打で助走 → タイミングよく踏み切り → 空中でもう一段ジャンプ！<br>いちばん高く跳んだ人の勝ち！</p>
+
+  <div class="setup">
+    <div class="row">
+      <span>人数</span>
+      <div id="count-btns" class="seg">
+        <button data-n="1" class="on">1人</button>
+        <button data-n="2">2人</button>
+        <button data-n="3">3人</button>
+        <button data-n="4">4人</button>
+      </div>
+    </div>
+    <div class="row">
+      <span>回数</span>
+      <div id="round-btns" class="seg">
+        <button data-n="1">1回</button>
+        <button data-n="3" class="on">3回</button>
+      </div>
+    </div>
+    <div id="names"></div>
+  </div>
+
+  <button id="start-btn" class="big">スタート！</button>
+  <button id="rank-btn" class="sub">ランキングを見る</button>
+
+  <div class="howto">
+    <b>あそびかた</b>（スペースキー / 画面タップ）
+    <ol>
+      <li><b>助走</b>：3秒間とにかく連打！スピードをためる</li>
+      <li><b>踏み切り</b>：動くマーカーがまん中に来たら押す</li>
+      <li><b>空中ジャンプ</b>：ちぢむ輪がキャラに重なった瞬間に押す</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 1人ずつの準備 -->
+<section id="ready" class="screen hidden">
+  <div id="ready-round"></div>
+  <div id="ready-name"></div>
+  <div id="ready-best"></div>
+  <button id="ready-btn" class="big">準備OK！</button>
+  <p class="hint">押すとカウントダウンが始まります</p>
+</section>
+
+<!-- 1回ごとの結果 -->
+<section id="jump-result" class="screen hidden">
+  <div id="jr-name"></div>
+  <div id="jr-height"></div>
+  <div id="jr-detail"></div>
+  <div id="jr-landmark"></div>
+  <div id="jr-new" class="hidden">自己ベスト更新！</div>
+  <button id="jr-next" class="big">つぎへ</button>
+</section>
+
+<!-- 最終結果 -->
+<section id="final" class="screen hidden">
+  <h2>けっか発表</h2>
+  <ol id="final-list"></ol>
+  <div id="final-rank-msg"></div>
+  <button id="again-btn" class="big">もう一回</button>
+  <button id="title-btn" class="sub">タイトルへ</button>
+</section>
+
+<!-- ランキング -->
+<section id="ranking" class="screen hidden">
+  <h2>歴代ランキング</h2>
+  <ol id="rank-list"></ol>
+  <button id="rank-back" class="big">もどる</button>
+  <button id="rank-clear" class="sub">ランキングを消す</button>
+</section>
+
+<script src="main.js"></script>
+</body>
+</html>
